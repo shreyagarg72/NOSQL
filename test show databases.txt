@@ -1,0 +1,358 @@
+test> show databases
+admin      40.00 KiB
+config     60.00 KiB
+local      72.00 KiB
+ncu_db    120.00 KiB
+students   88.00 KiB
+test> use employee
+switched to db employee
+
+employee> db.createCollection("employeedata")
+{ ok: 1 }
+employee> db.employeedata.insertOne({emono:111,ename:"Deepali Vaidya",sal:40000.00,dept:{deptno:12,dname:"hr",dloc:"Mumbai"},Desg:"analyst",mgr:{name:"satish",num:111},project:[{name:"Prpject-1",Hrs:4},{name:"project-2",Hrs:4}]})
+{
+  acknowledged: true,
+  insertedId: ObjectId("64e5c28d9d679f082b54cfe4")
+}
+
+employee> db.employeedata.insertOne({emono:112,ename:"anya garg",sal:50000.00,dept:{deptno:11,dname:"hr",dloc:"Delhi"},Desg:"engineer",mgr:{name:"harsh",num:112},project:[{name:"Prpject-1",Hrs:4},{name:"project-2",Hrs:6}]})
+{
+  acknowledged: true,
+  insertedId: ObjectId("64e5c3fe9d679f082b54cfe5")
+}
+
+employee> db.employeedata.insertOne({emono:113,ename:"ritika gupta",sal:55000.00,dept:{deptno:11,dname:"hr",dloc:"Delhi"},Desg:"manager",mgr:{name:"arjun",num:114},project:[{name:"Prpject-1",Hrs:6},{name:"project-5",Hrs:3}]})
+{
+  acknowledged: true,
+  insertedId: ObjectId("64e5c8189d679f082b54cfe6")
+}
+employee> db.employeedata.insertOne({emono:114,ename:"ajay gupta",sal:45000.00,dept:{deptno:011,dname:"hr",dloc:"Delhi"},Desg:"manager",mgr:{name:"gaipn",num:115},project:[{name:"Prpject-4",Hrs:7},{name:"project-4",Hrs:3}]})
+{
+  acknowledged: true,
+  insertedId: ObjectId("64e5c87d9d679f082b54cfe7")
+}
+employee> db.employeedata.insertOne({emono:115,ename:"akash",sal:50000.00,dept:{deptno:015,dname:"hr",dloc:"Mumbai"},Desg:"analyst",mgr:{name:"aman",num:116},project:[{name:"Prpject-1",Hrs:4},{name:"project-2",Hrs:1}]})
+{
+  acknowledged: true,
+  insertedId: ObjectId("64e5d0199d679f082b54cfe8")
+}
+employee> db.employeedata.insertOne({emono:115,ename:"gola",sal:50000.00,dept:{deptno:015,dname:"hr",dloc:"Mumbai"},Desg:"clerk",mgr:{name:"aman",num:116},project:[{name:"Prpject-1",Hrs:4},{name:"project-2",Hrs:1}]})
+{
+  acknowledged: true,
+  insertedId: ObjectId("64e5d0619d679f082b54cfe9")
+}
+
+1)
+
+employee> db.employeedata.updateOne({ename:"gola"},{$set:{Desg:"AO"}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+employee>
+
+2)
+employee> db.employeedata.replaceOne({ename:"akash"},{project:[{name:"Project-1",Hrs:4},{name:"Project-2",Hrs:2}]});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+3)
+employee> db.employeedata.replaceOne({ename:"a%"},{project:[{name:"Project-1",Hrs:4},{name:"Project-2",Hrs:2},{name:"Project-3",Hrs:2},{name:"Project-4",Hrs:2}]});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+==================================================================================================
+
+employee> db.employeedata.find({emono:{$eq:115}})
+[
+  {
+    _id: ObjectId("64e5d0619d679f082b54cfe9"),
+    emono: 115,
+    ename: 'gola',
+    sal: 50000,
+    dept: { deptno: 13, dname: 'hr', dloc: 'Mumbai' },
+    Desg: 'AO',
+    mgr: { name: 'aman', num: 116 },
+    project: [ { name: 'Prpject-1', Hrs: 4 }, { name: 'project-2', Hrs: 1 } ]
+  }
+]
+
+employee> db.employeedata.updateOne({ename:"gola"},{$set:{project:{name:"project-2"}}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+// access nested collection
+employee> db.employeedata.find({'mgr.name':{$eq:'aman'}})
+[
+  {
+    _id: ObjectId("64e5d0619d679f082b54cfe9"),
+    emono: 115,
+    ename: 'gola',
+    sal: 50000,
+    dept: { deptno: 13, dname: 'hr', dloc: 'Mumbai' },
+    Desg: 'AO',
+    mgr: { name: 'aman', num: 116 },
+    project: { name: 'project-2' }
+  }
+]
+employee>
+employee> db.employeedata.find({sal:{$lt:50000}})
+[
+  {
+    _id: ObjectId("64e5c28d9d679f082b54cfe4"),
+    emono: 111,
+    ename: 'Deepali Vaidya',
+    sal: 40000,
+    dept: { deptno: 12, dname: 'hr', dloc: 'Mumbai' },
+    Desg: 'analyst',
+    mgr: { name: 'satish', num: 111 },
+    project: [ { name: 'Prpject-1', Hrs: 4 }, { name: 'project-2', Hrs: 4 } ]
+  },
+  {
+    _id: ObjectId("64e5c87d9d679f082b54cfe7"),
+    emono: 114,
+    ename: 'ajay gupta',
+    sal: 45000,
+    dept: { deptno: 9, dname: 'hr', dloc: 'Delhi' },
+    Desg: 'manager',
+    mgr: { name: 'gaipn', num: 115 },
+    project: [ { name: 'Prpject-4', Hrs: 7 }, { name: 'project-4', Hrs: 3 } ]
+  }
+]
+
+employee> db.employeedata.find({project:{$in:['name.project-2','name.project-1']}})
+
+employee> db.employeedata.find({$and:[{"project.Hrs":4},{sal:{$lt:50000}}]})
+[
+  {
+    _id: ObjectId("64e5c28d9d679f082b54cfe4"),
+    emono: 111,
+    ename: 'Deepali Vaidya',
+    sal: 40000,
+    dept: { deptno: 12, dname: 'hr', dloc: 'Mumbai' },
+    Desg: 'analyst',
+    mgr: { name: 'satish', num: 111 },
+    project: [ { name: 'Prpject-1', Hrs: 4 }, { name: 'project-2', Hrs: 4 } ]
+  }
+]
+employee>
+employee> db.employeedata.find({$or:[{"project.Hrs":4},{sal:50000}]})
+[
+  {
+    _id: ObjectId("64e5c28d9d679f082b54cfe4"),
+    emono: 111,
+    ename: 'Deepali Vaidya',
+    sal: 40000,
+    dept: { deptno: 12, dname: 'hr', dloc: 'Mumbai' },
+    Desg: 'analyst',
+    mgr: { name: 'satish', num: 111 },
+    project: [ { name: 'Prpject-1', Hrs: 4 }, { name: 'project-2', Hrs: 4 } ]
+  },
+  {
+    _id: ObjectId("64e5c3fe9d679f082b54cfe5"),
+    emono: 112,
+    ename: 'anya garg',
+    sal: 50000,
+    dept: { deptno: 11, dname: 'hr', dloc: 'Delhi' },
+    Desg: 'engineer',
+    mgr: { name: 'harsh', num: 112 },
+    project: [ { name: 'Prpject-1', Hrs: 4 }, { name: 'project-2', Hrs: 6 } ]
+  },
+  {
+    _id: ObjectId("64e5d0199d679f082b54cfe8"),
+    project: [ { name: 'Project-1', Hrs: 4 }, { name: 'Project-2', Hrs: 2 } ]
+  },
+  {
+    _id: ObjectId("64e5d0619d679f082b54cfe9"),
+    emono: 115,
+    ename: 'gola',
+    sal: 50000,
+    dept: { deptno: 13, dname: 'hr', dloc: 'Mumbai' },
+    Desg: 'AO',
+    mgr: { name: 'aman', num: 116 },
+    project: { name: 'project-2' }
+  }
+]
+employee>
+employee> db.employeedata.find({sal:{$not:{$gt:50000}}})
+[
+  {
+    _id: ObjectId("64e5c28d9d679f082b54cfe4"),
+    emono: 111,
+    ename: 'Deepali Vaidya',
+    sal: 40000,
+    dept: { deptno: 12, dname: 'hr', dloc: 'Mumbai' },
+    Desg: 'analyst',
+    mgr: { name: 'satish', num: 111 },
+    project: [ { name: 'Prpject-1', Hrs: 4 }, { name: 'project-2', Hrs: 4 } ]
+  },
+  {
+    _id: ObjectId("64e5c3fe9d679f082b54cfe5"),
+    emono: 112,
+    ename: 'anya garg',
+    sal: 50000,
+    dept: { deptno: 11, dname: 'hr', dloc: 'Delhi' },
+    Desg: 'engineer',
+    mgr: { name: 'harsh', num: 112 },
+    project: [ { name: 'Prpject-1', Hrs: 4 }, { name: 'project-2', Hrs: 6 } ]
+  },
+ {
+    _id: ObjectId("64e5c87d9d679f082b54cfe7"),
+    emono: 114,
+    ename: 'ajay gupta',
+    sal: 45000,
+    dept: { deptno: 9, dname: 'hr', dloc: 'Delhi' },
+    Desg: 'manager',
+    mgr: { name: 'gaipn', num: 115 },
+    project: [ { name: 'Prpject-4', Hrs: 7 }, { name: 'project-4', Hrs: 3 } ]
+  },
+  {
+    _id: ObjectId("64e5d0199d679f082b54cfe8"),
+    project: [ { name: 'Project-1', Hrs: 4 }, { name: 'Project-2', Hrs: 2 } ]
+  },
+  {
+    _id: ObjectId("64e5d0619d679f082b54cfe9"),
+    emono: 115,
+    ename: 'gola',
+    sal: 50000,
+    dept: { deptno: 13, dname: 'hr', dloc: 'Mumbai' },
+    Desg: 'AO',
+    mgr: { name: 'aman', num: 116 },
+    project: { name: 'project-2' }
+  }
+]
+
+ db.employeedata.updateOne({ename:"gola"},{$push:{$each:[50,60],$position:1}});
+
+
+db.employeedata.updateOne({ename:"gola"},{$set:{'project.$':96}});
+
+employee> db.employeedata.find({sal:{$exists:true}})
+[
+  {
+    _id: ObjectId("64e5c28d9d679f082b54cfe4"),
+    emono: 111,
+    ename: 'Deepali Vaidya',
+    sal: 40000,
+    dept: { deptno: 12, dname: 'hr', dloc: 'Mumbai' },
+    Desg: 'analyst',
+    mgr: { name: 'satish', num: 111 },
+    project: [ { name: 'Prpject-1', Hrs: 4 }, { name: 'project-2', Hrs: 4 } ]
+  },
+  {
+    _id: ObjectId("64e5c3fe9d679f082b54cfe5"),
+    emono: 112,
+    ename: 'anya garg',
+    sal: 50000,
+    dept: { deptno: 11, dname: 'hr', dloc: 'Delhi' },
+    Desg: 'engineer',
+    mgr: { name: 'harsh', num: 112 },
+    project: [ { name: 'Prpject-1', Hrs: 4 }, { name: 'project-2', Hrs: 6 } ]
+  },
+  {
+    _id: ObjectId("64e5c8189d679f082b54cfe6"),
+    emono: 113,
+    ename: 'ritika gupta',
+    sal: 55000,
+    dept: { deptno: 11, dname: 'hr', dloc: 'Delhi' },
+    Desg: 'manager',
+ mgr: { name: 'arjun', num: 114 },
+    project: [ { name: 'Prpject-1', Hrs: 6 }, { name: 'project-5', Hrs: 3 } ]
+  },
+  {
+    _id: ObjectId("64e5c87d9d679f082b54cfe7"),
+    emono: 114,
+    ename: 'ajay gupta',
+    sal: 45000,
+    dept: { deptno: 9, dname: 'hr', dloc: 'Delhi' },
+    Desg: 'manager',
+    mgr: { name: 'gaipn', num: 115 },
+    project: [ { name: 'Prpject-4', Hrs: 7 }, { name: 'project-4', Hrs: 3 } ]
+  },
+  {
+    _id: ObjectId("64e5d0619d679f082b54cfe9"),
+    emono: 115,
+    ename: 'gola',
+    sal: 50000,
+    dept: { deptno: 13, dname: 'hr', dloc: 'Mumbai' },
+    Desg: 'AO',
+    mgr: { name: 'aman', num: 116 },
+    project: { name: 'project-2' }
+  }
+]
+
+employee> db.employeedata.updateOne({ename:"gola"},{$set:{Desg:'AO'}});
+
+db.employeedata.find({sal:{$exists:true,$lt:50000}})
+[   mgr: { name: 'arjun', num: 114 },
+  { project: [ { name: 'Prpject-1', Hrs: 6 }, { name: 'project-5', Hrs: 3 } ]
+    _id: ObjectId("64e5c28d9d679f082b54cfe4"),
+    emono: 111,
+    ename: 'Deepali Vaidya',d679f082b54cfe7"),
+    sal: 40000,
+    dept: { deptno: 12, dname: 'hr', dloc: 'Mumbai' },
+    Desg: 'analyst',
+    mgr: { name: 'satish', num: 111 },oc: 'Delhi' },
+    project: [ { name: 'Prpject-1', Hrs: 4 }, { name: 'project-2', Hrs: 4 } ]
+  },mgr: { name: 'gaipn', num: 115 },
+  { project: [ { name: 'Prpject-4', Hrs: 7 }, { name: 'project-4', Hrs: 3 } ]
+    _id: ObjectId("64e5c87d9d679f082b54cfe7"),
+    emono: 114,
+    ename: 'ajay gupta',0619d679f082b54cfe9"),
+    sal: 45000,
+    dept: { deptno: 9, dname: 'hr', dloc: 'Delhi' },
+    Desg: 'manager',
+    mgr: { name: 'gaipn', num: 115 },dloc: 'Mumbai' },
+    project: [ { name: 'Prpject-4', Hrs: 7 }, { name: 'project-4', Hrs: 3 } ]
+  } mgr: { name: 'aman', num: 116 },
+]   project: { name: 'project-2' }
+employee>
+]
+employee> db.employeedata.updateOne({ename:"gola"},{$set:{Desg:'AO'}});
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+
+ db.employeedata.find({sal:{$type:"number"}})
+
+ db.employeedata.find({sal:{$type:1}});
+    project: [ { name: 'Prpject-4', Hrs: 7 }, { name: 'project-4', Hrs: 3 } ]
+employee>
+  {
+    _id: ObjectId("64e5d0619d679f082b54cfe9"),
+    emono: 115,
+    ename: 'gola',
+    sal: 50000,
+    dept: { deptno: 13, dname: 'hr', dloc: 'Mumbai' },
+    Desg: 'AO',
+    mgr: { name: 'aman', num: 116 },
+    project: { name: 'project-2' }
+  }
+]
+
+ db.employeedata.find({project:{$size:2}})
+
+prints array of size 2
+db.employeedata.find({"sal":{elemMatch:{$lt:{50000}}}})
