@@ -73,6 +73,43 @@ employee> db.employeedata.replaceOne({ename:"a%"},{project:[{name:"Project-1",Hr
   modifiedCount: 0,
   upsertedCount: 0
 }
+
+4)employee>
+db.employeedata.updateMany({salary: {$gt:50000}},{$inc:{salary:2000}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 3,
+  modifiedCount: 3,
+  upsertedCount: 0
+}
+
+5)
+employee> db.employeedata.updateMany({'mgr.name':'aman'},{$set:{'mgr.name':'gola'}, $set:{'mgr.emono':3333}})
+
+6)employee>
+db.employee.updateMany({'dept.dname':"AO"},{$inc:{'salary':15000}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+7)
+employee>db.employeedata.updateMany({ "project.name": "project-2" },{ $inc: { "project.Hrs": 2 }})
+
+8)employee>
+db.Employee.deleteMany({"project.name":"project-2"},{if :{"project.Hrs":4}})
+
+9)employee>db.employeedata.find({"sal":{$gt:{50000}}})
+
+10)employee> db.employeedata.updateMany( { $or:[{bonus:{$lt : 2000} },{salary : {$lt : 20000}},{"dept.dname":"sales"}]},{$inc: {bonus:500}})
+
+11) employee> db.employeedata.updateMany({$or:[{"project.Hrs":4},{sal:50000}]})
+
+12)
 ==================================================================================================
 
 employee> db.employeedata.find({emono:{$eq:115}})
